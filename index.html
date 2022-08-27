@@ -14,11 +14,11 @@
 
 <body>
     <div>
-        <label>Upload a File:</label>
-        <input type="file" name="upload" id="upload">
+        <label>Drag and Drop File Here:</label>
+        <input class="droparea" type="file" name="upload" id="upload">
     </div>
     <div>
-        <form action="/cgi-bin/hello_get.cgi" method="get">
+        <form method="get">
             Or Place Raw Text Here:
             <br />
 
@@ -26,8 +26,8 @@
 
          </textarea>
         </form>
-        <button id="remove-button" pys-onClick="remover">Remove</button>
-        <button id="clear-button" pys-onClick="clear">Clear</button>
+        <button class="button-go" id="remove-button" pys-onClick="remover">Remove Timestamps</button>
+        <button class="button-stop" id="clear-button" pys-onClick="clear">Clear Text</button>
     </div>
     <div>
         <p id="output"></p>
@@ -96,5 +96,55 @@
     main()
 
 </py-script>
+<style>
+  .button-go {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  border-radius: 12px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+.button-stop {
+  background-color: #f44336; /* Red */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  border-radius: 12px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
 
+.input-style {
+  background-color: #f44336; /* Red */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  border-radius: 12px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.droparea {
+  margin: 1rem auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-family: Arial;
+  width: 384px;
+  max-width: 100%;
+  height: 160px;
+  border: 4px dashed rgb(3, 0, 0);
+  border-radius: 15px;
+}
+</style>
 </html>
