@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Timestamp Remover</title>
+        <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+        <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    </head>
+</head>
+
+<body>
+    <div>
+        <label>Upload a File:</label>
+        <input type="file" name="upload" id="upload">
+    </div>
+    <div>
+        <form action="/cgi-bin/hello_get.cgi" method="get">
+            Or Place Raw Text Here:
+            <br />
+
+            <textarea rows="5" cols="50" name="rawtext" id="rawtext">
+
+         </textarea>
+        </form>
+        <button id="remove-button" pys-onClick="remover">Remove</button>
+        <button id="clear-button" pys-onClick="clear">Clear</button>
+    </div>
+    <div>
+        <p id="output"></p>
+
+    </div>
+</body>
+<py-script>
+    import asyncio
+    import js
+    from js import document, FileReader
+    from pyodide import create_proxy
+    input_text = Element("rawtext")
+
+    output_text = Element("output")
+
+    def clear(*args, **kwargs):
+        input_text.clear()
+
+    
+    def timestamp_remover(text):
+        # Get list of indices with timestamp-like objects, reverse order and remove
+        listofindices = []
+        for x in range(len(text)):
+            try:
+                if text[x+2] and text[x+5] == ':':
+                    for y in range(8):
+                        listofindices.append(x+y)
+            except IndexError:
+                pass
+
+        listofindices.sort(reverse=True)
+        for x in listofindices:
+            text = ''.join([text[i] for i in range(len(text)) if i != x])
+
+        new_file_contents = "".join(text)
+        return new_file_contents
+
+    def remover(*args, **kwargs):
+        ip = input_text.value
+        output = timestamp_remover(ip)
+        output_text.write(output)
+
+
+    def read_complete(event):
+        ip = event.target.result
+        output = timestamp_remover(ip)
+        output_text.write(output)
+
+    async def process_file(x):
+        files = document.getElementById('upload').files
+
+        for file in files:
+            reader = FileReader.new()
+            onload_event = create_proxy(read_complete)
+
+            reader.onload = onload_event
+            reader.readAsText(file)
+
+        return
+
+    def main():
+        file_event = create_proxy(process_file)
+        e = document.getElementById("upload")
+        e.addEventListener("change", file_event, False)
+
+    main()
+
+</py-script>
+
+</html>
